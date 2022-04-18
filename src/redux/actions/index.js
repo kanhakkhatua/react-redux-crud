@@ -5,10 +5,17 @@ export const setAllUser = (data) => {
   };
 };
 
-export const setSingleUser = (data, index) => {
+export const setSingleUser = (index) => {
   return {
     type: "setSingleUser",
-    payload: data,
     index: index,
+  };
+};
+
+export const setEditData = (data, i) => {
+  return {
+    type: "setEditData",
+    payload: data,
+    i: i,
   };
 };

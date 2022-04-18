@@ -3,36 +3,70 @@ import { Table, Button } from "react-bootstrap";
 import CreateModal from "./component/CreateModal";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setAllUser } from "./redux/actions";
-// import {} from "./redux/reducers/Curd";
+import { setAllUser, setSingleUser } from "./redux/actions";
 
 function App() {
   const dispatch = useDispatch();
 
   const [newUser, setNewUser] = useState(useSelector((state) => state.AllUser));
   // console.log(newUser);
+  const [reduxSingleUser, setReduxSingleUser] = useState(
+    useSelector((state) => state.SingleUser)
+  );
+
+  // console.log("reduxSingleUser >>>>", reduxSingleUser);
 
   const changeRedux = useSelector((state) => state.AllUser);
+
+  // const [i, setI] = useState("");
 
   const [newuserData, setnewUserData] = useState({
     name: "",
     email: "",
     phone: "",
   });
-  // console.log(newuserData);
+  // console.log("newuserdata >>", newuserData);
+
+  const clearData = () => {
+    setnewUserData({
+      ...newuserData,
+      name: "",
+      email: "",
+      phone: "",
+    });
+  };
+
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
     setNewUser(changeRedux);
   }, [changeRedux]);
 
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    clearData();
+    setShow(true);
+  };
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    // clearData();
+    setShow(false);
+    setOpenEditModal(false);
+  };
   function submitNewUserData() {
+    // console.log(newuserData);
     dispatch(setAllUser(newuserData));
     setShow(false);
+    clearData();
   }
+  function EditUser(i) {
+    // console.log("edit >>>>", i);
+
+    dispatch(setSingleUser(i));
+    setOpenEditModal(true);
+    setShow(true);
+  }
+
   return (
     <>
       <h1>Home Page</h1>
@@ -43,9 +77,16 @@ function App() {
       <CreateModal
         handleClose={handleClose}
         show={show}
+        setShow={setShow}
+        newUser={newUser}
         submitNewUserData={submitNewUserData}
         newuserData={newuserData}
         setnewUserData={setnewUserData}
+        openEditModal={openEditModal}
+        // submitEditData={submitEditData}
+        reduxSingleUser={reduxSingleUser}
+        setReduxSingleUser={setReduxSingleUser}
+        setOpenEditModal={setOpenEditModal}
       />
 
       <Table striped bordered hover>
@@ -66,7 +107,7 @@ function App() {
                 <td>{ele.email}</td>
                 <td>{ele.phone}</td>
                 <td>
-                  <Button>Edit</Button>
+                  <Button onClick={() => EditUser(i)}>Edit</Button>
                 </td>
                 <td>
                   <Button>Delete</Button>

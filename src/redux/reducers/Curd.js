@@ -1,5 +1,5 @@
-const initialState = new Array();
-const singleUserInitial = [];
+let initialState = new Array();
+const singleUserInitial = {};
 
 const AllUser = (state = initialState, action) => {
   switch (action.type) {
@@ -7,12 +7,11 @@ const AllUser = (state = initialState, action) => {
       // console.log(action.payload);
       let payload = action.payload;
       let arr = state;
-      // console.log(arr);
+
       arr.push(payload);
       state = arr;
-      // console.log(state);
-      return state;
 
+      return state;
     default:
       return state;
   }
@@ -20,10 +19,34 @@ const AllUser = (state = initialState, action) => {
 const SingleUser = (state = singleUserInitial, action) => {
   switch (action.type) {
     case "setSingleUser":
-      return state.push(action.payload);
+      let copydata = initialState[action.index];
+
+      state.name = copydata.name;
+      state.email = copydata.email;
+      state.phone = copydata.phone;
+      state.index = action.index;
+
+      return state;
     default:
       return state;
   }
 };
 
-export { AllUser, SingleUser };
+const updateUser = (state = initialState, action) => {
+  switch (action.type) {
+    case "setEditData":
+      let copydata = state[action.i];
+      let data = action.payload;
+
+      console.log(copydata);
+      console.log(data);
+
+      // const UpdateData = state.filter((e) => {});
+
+      return state;
+    default:
+      return state;
+  }
+};
+
+export { AllUser, SingleUser, updateUser };
