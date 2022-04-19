@@ -3,29 +3,24 @@ import { Table, Button } from "react-bootstrap";
 import CreateModal from "./component/CreateModal";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setAllUser, setSingleUser } from "./redux/actions";
+import { setSingleUser, setUpdatedData, deleteUserData } from "./redux/actions";
 
 function App() {
   const dispatch = useDispatch();
-
+  const [editIndex, setEditIndex] = useState(null);
   const [newUser, setNewUser] = useState(useSelector((state) => state.AllUser));
-  // console.log(newUser);
-  const [reduxSingleUser, setReduxSingleUser] = useState(
-    useSelector((state) => state.SingleUser)
-  );
 
-  // console.log("reduxSingleUser >>>>", reduxSingleUser);
+  const [reduxSingleUser, setReduxSingleUser] = useState({});
+  const [openEditModal, setOpenEditModal] = useState(false);
 
-  const changeRedux = useSelector((state) => state.AllUser);
-
-  // const [i, setI] = useState("");
+  const allReduxData = useSelector((state) => state.AllUser);
+  const singleUser = useSelector((state) => state.SingleUser);
 
   const [newuserData, setnewUserData] = useState({
     name: "",
     email: "",
     phone: "",
   });
-  // console.log("newuserdata >>", newuserData);
 
   const clearData = () => {
     setnewUserData({
@@ -36,35 +31,55 @@ function App() {
     });
   };
 
-  const [openEditModal, setOpenEditModal] = useState(false);
+  useEffect(() => {
+    setNewUser(allReduxData);
+  }, [allReduxData]);
 
   useEffect(() => {
-    setNewUser(changeRedux);
-  }, [changeRedux]);
+    setReduxSingleUser(singleUser);
+  }, [singleUser]);
 
   const handleShow = () => {
     clearData();
     setShow(true);
   };
-  const [show, setShow] = useState(false);
-
   const handleClose = () => {
-    // clearData();
     setShow(false);
     setOpenEditModal(false);
   };
+  const [show, setShow] = useState(false);
+
   function submitNewUserData() {
-    // console.log(newuserData);
-    dispatch(setAllUser(newuserData));
+    newUser.push(newuserData);
+    dispatch(setUpdatedData(newUser));
+
     setShow(false);
     clearData();
   }
-  function EditUser(i) {
-    // console.log("edit >>>>", i);
 
-    dispatch(setSingleUser(i));
+  function EditUser(i) {
+    setEditIndex(i);
+    dispatch(setSingleUser(newUser[i]));
     setOpenEditModal(true);
     setShow(true);
+  }
+
+  function submitEditData() {
+    let i = editIndex;
+
+    newUser[i].name = reduxSingleUser.name;
+    newUser[i].email = reduxSingleUser.email;
+    newUser[i].phone = reduxSingleUser.phone;
+
+    dispatch(setUpdatedData(newUser));
+
+    setShow(false);
+    setOpenEditModal(false);
+  }
+
+  function DeleteUser(ind) {
+    let filterArr = newUser.filter((val, i) => i !== ind);
+    dispatch(deleteUserData(filterArr));
   }
 
   return (
@@ -77,16 +92,13 @@ function App() {
       <CreateModal
         handleClose={handleClose}
         show={show}
-        setShow={setShow}
-        newUser={newUser}
-        submitNewUserData={submitNewUserData}
-        newuserData={newuserData}
-        setnewUserData={setnewUserData}
         openEditModal={openEditModal}
-        // submitEditData={submitEditData}
         reduxSingleUser={reduxSingleUser}
+        newuserData={newuserData}
         setReduxSingleUser={setReduxSingleUser}
-        setOpenEditModal={setOpenEditModal}
+        setnewUserData={setnewUserData}
+        submitEditData={submitEditData}
+        submitNewUserData={submitNewUserData}
       />
 
       <Table striped bordered hover>
@@ -110,7 +122,7 @@ function App() {
                   <Button onClick={() => EditUser(i)}>Edit</Button>
                 </td>
                 <td>
-                  <Button>Delete</Button>
+                  <Button onClick={() => DeleteUser(i)}>Delete</Button>
                 </td>
               </tr>
             );

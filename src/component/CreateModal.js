@@ -1,20 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { setEditData } from "../redux/actions";
 
 function CreateModal(props) {
-  const dispatch = useDispatch();
-
-  function submitEditData(i) {
-    // console.log(props.reduxSingleUser, i);
-
-    dispatch(setEditData(props.reduxSingleUser, i));
-
-    props.setOpenEditModal(false);
-    props.setShow(false);
-  }
-
   return (
     <>
       <Modal show={props.show} onHide={props.handleClose}>
@@ -108,18 +95,16 @@ function CreateModal(props) {
             Close
           </Button>
 
-          {props.openEditModal === true ? (
-            <Button
-              variant="primary"
-              onClick={() => submitEditData(props.reduxSingleUser.index)}
-            >
-              Save Changes
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={props.submitNewUserData}>
-              Submit
-            </Button>
-          )}
+          <Button
+            variant="primary"
+            onClick={
+              props.openEditModal === true
+                ? () => props.submitEditData()
+                : props.submitNewUserData
+            }
+          >
+            Save Changes
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

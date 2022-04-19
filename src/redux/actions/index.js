@@ -1,21 +1,20 @@
-export const setAllUser = (data) => {
-  return {
-    type: "setAllUser",
-    payload: data,
-  };
-};
-
-export const setSingleUser = (index) => {
+export const setSingleUser = (data) => {
   return {
     type: "setSingleUser",
-    index: index,
+    payload: data,
   };
 };
 
-export const setEditData = (data, i) => {
+export const setUpdatedData = (data) => {
   return {
-    type: "setEditData",
+    type: "setUpdatedData",
     payload: data,
-    i: i,
+  };
+};
+
+export const deleteUserData = (data) => {
+  return {
+    type: "deleteUserData",
+    payload: data,
   };
 };

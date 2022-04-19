@@ -1,11 +1,11 @@
-import { AllUser, SingleUser, updateUser } from "./Curd";
+import { AllUser } from "./Curd";
+import { SingleUser } from "./SingleUser";
 
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
   AllUser,
   SingleUser,
-  updateUser,
 });
 
 export default rootReducer;
